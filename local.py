@@ -14,7 +14,6 @@ def main():
         "version" : platform.release()
     }
 
-
     # CPU Info
     cpu_count = psutil.cpu_count()
     cpu_usage = psutil.cpu_percent(interval=1)
@@ -48,7 +47,6 @@ def main():
 
     # Bandwidth Info 
     network_stats = get_bandwidth()
-    ##print("Network:\n\tTraffic in:",network_stats["traffic_in"] / 1e+6,"\n\tTraffic out:",network_stats["traffic_out"] / 1e+6)
 
     # Network Info
     nics = []
@@ -72,7 +70,6 @@ def main():
             elif snic.family == 23:
                 nic["address6"] = snic.address
         nics.append(nic)
-        ##print("\tNIC:",nic["name"], "\tMAC:", nic["mac"], "\tIPv4 Address:",nic["address"], "\tIPv4 Subnet:", nic["netmask"], "\tIPv6 Address:", nic["address6"])
 	
     # Set Machine Info
     machine = {
@@ -90,8 +87,6 @@ def main():
     }
 
     data = json.dumps(machine)
-    ##print("\nData:")
-    ##pprint.pprint(machine, indent=4)
 
     send_data(data)
 
@@ -121,15 +116,12 @@ def get_bandwidth():
     return network
 
 def send_data(data):
-    # Attempt to send data up to 30 times
+    # Se der erro 30 vezes consecutivas encerrra
     for attempt in range(30):
         try:
             # endpoint = monitoring server
             endpoint = servidorDestino
-            endpoint = "http://localhost:8080"
             response = requests.post(url = endpoint, data = data)
-            print("\nPOST:", response.status_code)
-            print("Content:", response.content)
             if(response.status_code == 200):
                 print("Success")
             else:
